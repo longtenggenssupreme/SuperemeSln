@@ -1,0 +1,10 @@
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\bin\Debug\ConsoleTool.exe.config
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\bin\Debug\ConsoleTool.exe
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\bin\Debug\ConsoleTool.pdb
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\obj\Debug\ConsoleTool.csprojAssemblyReference.cache
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\obj\Debug\ConsoleTool.csproj.CoreCompileInputs.cache
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\obj\Debug\ConsoleTool.exe
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\obj\Debug\ConsoleTool.pdb
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\bin\Debug\Newtonsoft.Json.dll
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\bin\Debug\Newtonsoft.Json.xml
+E:\SuperemeSln\SuperemeSln\ConsoleTool\ConsoleTool\obj\Debug\ConsoleTool.csproj.CopyComplete
