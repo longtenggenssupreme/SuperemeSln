@@ -57,6 +57,7 @@ namespace ConsoleTool
             {
                 listener = new HttpListener();
                 listener.Prefixes.Add("http://+:" + tunnelPort + "/");
+                //listener.Prefixes.Add("http://");
                 listener.Start();
                 Console.WriteLine($"启动主机成功");
                 while (true)
@@ -69,7 +70,7 @@ namespace ConsoleTool
             {
                 Thread.Sleep(1000);
                 Console.WriteLine($"启动主机出错。错误信息：{e}");
-            }           
+            }
         }
 
         private void ListenerCallback(IAsyncResult result)
@@ -95,35 +96,74 @@ namespace ConsoleTool
             {
                 string url = HttpUtility.UrlDecode(request.RawUrl);
                 Match match = rOperation.Match(request.RawUrl);
-                if (match.Success)
+                PadResponseData responseData = new PadResponseData
                 {
-                    if (match.Groups["Data"].Value == "SendEvaluateData")
+                    Success = false
+                };
+                if (request.HttpMethod.ToLower() == "post")
+                {
+                    try
                     {
-                        PadResponseData responseData = new PadResponseData
-                        {
-                            Success = false
-                        };
-                        if (request.HttpMethod.ToLower() == "post")
-                        {
-                            try
-                            {
-                                StreamReader streamReader = new StreamReader(request.InputStream);
-                                string paramsString = streamReader.ReadToEnd();
-                                paramsString = HttpUtility.UrlDecode(paramsString);
-                                responseData.Success = true;
-                            }
-                            catch
-                            {
-                            }
-                        }
-                        Success(context, responseData);
+                        StreamReader streamReader = new StreamReader(request.InputStream);
+                        string paramsString = streamReader.ReadToEnd();
+                        paramsString = HttpUtility.UrlDecode(paramsString);
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        //Console.WriteLine($"收到数据{paramsString}");
+                        Console.WriteLine($"收到数据");
+                        responseData.Success = true;
+                        //responseData.Data =new Dictionary<string, object>() {["shoudao"] =$"收到数据{paramsString}" } ;
+                        responseData.Data = new Dictionary<string, object>() { ["shoudao"] = $"收到数据" };
+                    }
+                    catch
+                    {
                     }
                 }
-                else {
+                
+                if (responseData.Success)
+                {
+                    Success(context, responseData);
+                }
+                else
+                {
                     Fail(context);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("出错。。。。");
                     //context.Response.StatusCode = 1234;
                     //context.Response.Close();
                 }
+                #region MyRegion
+                //Match match = rOperation.Match(request.RawUrl);
+                //if (match.Success)
+                //{
+                //    if (match.Groups["Data"].Value == "SendEvaluateData")
+                //    {
+                //        PadResponseData responseData = new PadResponseData
+                //        {
+                //            Success = false
+                //        };
+                //        if (request.HttpMethod.ToLower() == "post")
+                //        {
+                //            try
+                //            {
+                //                StreamReader streamReader = new StreamReader(request.InputStream);
+                //                string paramsString = streamReader.ReadToEnd();
+                //                paramsString = HttpUtility.UrlDecode(paramsString);
+                //                responseData.Success = true;
+                //            }
+                //            catch
+                //            {
+                //            }
+                //        }
+                //        Success(context, responseData);
+                //    }
+                //}
+                //else
+                //{
+                //    Fail(context);
+                //    //context.Response.StatusCode = 1234;
+                //    //context.Response.Close();
+                //} 
+                #endregion
             }
             catch (Exception e)
             {
@@ -148,14 +188,23 @@ namespace ConsoleTool
         private void Success(HttpListenerContext context, object data)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
+            context.Response.AppendHeader("Access-Control-Allow-Origin", "*");
+            //context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            //context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            //context.Response.Headers.Add("Access-Control-Allow-Headers", ",Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild");
+            //context.Response.Headers.Add("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+            ////context.Response.Headers.Add("X-Powered-By", "3.2.1");
+            //context.Response.Headers.Add("Content-Type", "application/json;charset=utf-8");
             context.Response.OutputStream.Write(bytes, 0, bytes.Length);
             context.Response.Close();
         }
 
         private void Fail(HttpListenerContext context)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes("11111111");
-            context.Response.OutputStream.Write(bytes, 0, bytes.Length);
+            byte[] bytes = Encoding.UTF8.GetBytes("不匹配哦");
+            //context.Response.AppendHeader("Access-Control-Allow-Origin", "*");
+            context.Response.AppendHeader("Access-Control-Allow-Origin", "*");
+            context.Response.OutputStream.Write(bytes, 0, bytes.Length);          
             context.Response.Close();
         }
 
